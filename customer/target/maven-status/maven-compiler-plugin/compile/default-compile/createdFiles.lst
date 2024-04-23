@@ -1,0 +1,8 @@
+com/priaji/customer/CustomerRequest.class
+com/priaji/customer/Customer.class
+com/priaji/customer/FraudCheckResponse.class
+com/priaji/customer/Customer$CustomerBuilder.class
+com/priaji/customer/CustomerRepository.class
+com/priaji/customer/CustomerController.class
+com/priaji/customer/CustomerApplication.class
+com/priaji/customer/CustomerService.class

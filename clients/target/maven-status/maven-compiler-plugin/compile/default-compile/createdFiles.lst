@@ -1,0 +1,4 @@
+com/priaji/clients/notification/NotificationClient.class
+com/priaji/clients/fraud/FraudCheckResponse.class
+com/priaji/clients/notification/NotificationRequest.class
+com/priaji/clients/fraud/FraudClient.class
