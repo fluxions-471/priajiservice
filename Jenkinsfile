@@ -25,14 +25,19 @@ pipeline {
         }
 
         stage("Sonarqube Analysis") {
-            steps {
-                script {
-                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                        sh "mvn sonar:sonar"
+                    steps {
+                        script {
+                            def modules = ["apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
+
+                            modules.each { module ->
+                                dir("priajiservice/${module}") {
+                                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+                                        sh "mvn sonar:sonar"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-            }
-
-        }
     }
 }
