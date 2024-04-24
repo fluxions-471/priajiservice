@@ -31,6 +31,7 @@ pipeline {
 
                             modules.each { module ->
                                 dir("priajiservice/${module}") {
+                                    pwd()
                                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
                                         sh "mvn sonar:sonar"
                                     }
