@@ -30,7 +30,7 @@ pipeline {
                             def modules = ["apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
 
                             modules.each { module ->
-                                dir("priajiservice/${module}") {
+                                dir("priajiservices/${module}") {
                                     pwd()
                                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
                                         sh "mvn sonar:sonar"
