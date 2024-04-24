@@ -1,8 +1,0 @@
-com/priaji/notification/Notification$NotificationBuilder.class
-com/priaji/notification/Notification.class
-com/priaji/notification/NotificationConfig.class
-com/priaji/notification/NotificationService.class
-com/priaji/notification/rabbitmq/NotificationConsumer.class
-com/priaji/notification/NotificationApplication.class
-com/priaji/notification/NotificationController.class
-com/priaji/notification/NotificationRepository.class
