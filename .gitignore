@@ -24,3 +24,10 @@ hs_err_pid*
 replay_pid*
 
 **/target/
+amqp/target/
+apigw/target/
+clients/target/
+customer/target/
+eureka-server/target/
+fraud/target/
+notification/target/
