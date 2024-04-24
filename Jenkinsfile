@@ -1,6 +1,6 @@
 pipeline{
     agent{
-        label "node"
+        label "agent any"
     }
     tools {
         jdk 'Java17'
