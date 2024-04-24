@@ -21,8 +21,6 @@ public class CustomerService {
                 .lastName(request.lastName())
                 .email(request.email())
                 .build();
-        // todo: check if email valid
-        // todo: check if email not taken
         customerRepository.saveAndFlush(customer);
 
         FraudCheckResponse fraudCheckResponse =
@@ -32,7 +30,6 @@ public class CustomerService {
             throw new IllegalStateException("fraudster");
         }
 
-        // todo: make it async. i.e add to queue
         NotificationRequest notificationRequest = new NotificationRequest(
                 customer.getId(),
                 customer.getEmail(),

@@ -23,22 +23,31 @@ pipeline {
                 sh "mvn clean install"
             }
         }
-
+//         stage("Sonarqube Analysis") {
+//                     steps {
+//                         script {
+//                             def modules = ["apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
+//
+//                             modules.each { module ->
+//                                 dir("${module}") {
+//                                     pwd()
+//                                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+//                                         sh "mvn sonar:sonar"
+//                                     }
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
         stage("Sonarqube Analysis") {
                     steps {
                         script {
-                            def modules = ["apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
-
-                            modules.each { module ->
-                                dir("${module}") {
-                                    pwd()
-                                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                                        sh "mvn sonar:sonar"
-                                    }
-                                }
+                            withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+                                sh "mvn sonar:sonar"
                             }
                         }
                     }
                 }
+//      mvn clean compile jib:build
     }
 }
