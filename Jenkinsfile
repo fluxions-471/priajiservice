@@ -53,7 +53,7 @@ pipeline {
                 script {
                     def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
                     for (module in modules) {
-                        sh 'docker pull ${module}:tag'
+                        sh "docker pull ${DOCKER_USER}/${module}:latest"
                     }
                 }
             }
