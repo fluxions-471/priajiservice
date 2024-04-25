@@ -1,39 +1,11 @@
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: jenkins-webhook-config
-data:
-  TOKEN: "admin:11312a0a0096aac2316f158e26db6bee1a"
-
----
-
-apiVersion: apps/v1
-kind: Deployment
+kind: Pod
 metadata:
   name: jenkins-webhook
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: jenkins-webhook
-  template:
-    metadata:
-      labels:
-        app: jenkins-webhook
-    spec:
-      restartPolicy: Never
-      containers:
-        - name: jenkins-webhook
-          image: curlimages/curl:latest
-          command: ["sh", "-c", "curl -v -k --user admin:11312a0a0096aac2316f158e26db6bee1a -X POST --max-time 10 -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=latest' http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token || (echo 'Error during curl' && exit 1)"]
-          readinessProbe:
-            exec:
-              command:
-                - "sh"
-                - "-c"
-                - "response=$(curl -s -v -k --user admin:11312a0a0096aac2316f158e26db6bee1a -X POST --max-time 10 -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=latest' http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token); echo $response | grep -q 'upload completely sent off: 18 bytes' && echo $response | grep -q 'HTTP/1.1 201 Created'"
-            initialDelaySeconds: 2
-            periodSeconds: 5
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 1
+  restartPolicy: Never
+  containers:
+    - name: jenkins-webhook
+      image: curlimages/curl:latest
+      command: ["curl"]
+      args: ["-v", "-k", "--user", "admin:11312a0a0096aac2316f158e26db6bee1a", "-X", "--max-time", "10", "POST", "-H", "'cache-control: no-cache'", "-H", "'content-type: application/x-www-form-urlencoded'", "--data", "'IMAGE_TAG=latest'", "http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token"]
