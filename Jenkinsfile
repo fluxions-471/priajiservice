@@ -8,6 +8,7 @@ pipeline {
     environment {
         DOCKER_USER = "priajiabror"
         DOCKER_PASS = 'dockerhub-aji2'
+        DISCORD_WEBHOOK = credentials('discord-webhook')
     }
     stages {
         stage("Build Application"){
@@ -60,6 +61,14 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+    post {
+        failure {
+                discordSend description: 'Build Failure env.JOB_NAME', footer: '', image: '', link: '', result: 'FAILURE', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: 'Jenkins - priajiservice', webhookURL: DISCORD_WEBHOOK
+        }
+        success {
+               discordSend description: 'Build Success env.JOB_NAME', footer: '', image: '', link: '', result: 'SUCCESS', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: 'Jenkins - priajiservice', webhookURL: DISCORD_WEBHOOK
         }
     }
 }
