@@ -8,7 +8,6 @@ pipeline {
     environment {
         DOCKER_USER = "priajiabror"
         DOCKER_PASS = 'dockerhub-aji2'
-        JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
     stages {
         stage('Cleanup Workspace') {
