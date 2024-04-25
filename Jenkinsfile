@@ -11,89 +11,73 @@ pipeline {
         JENKINS_API_TOKEN = credentials('JENKINS_API_TOKEN')
     }
     stages {
-//         stage('Cleanup Workspace') {
-//             steps {
-//                 cleanWs()
-//             }
-//         }
-//         stage('Checkout from SCM') {
-//             steps {
-//                 git branch: 'main', credentialsId: 'github-aji', url: 'https://github.com/fluxions-471/priajiservice.git'
-//             }
-//         }
         stage("Build Application"){
             steps {
                 sh "mvn clean package"
             }
-
         }
-//         stage("Sonarqube Analysis") {
-//             steps {
-//                 script {
-//                     def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
-//
-//                     modules.each { module ->
-//                         dir("${module}") {
-//                             pwd()
-//                             withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-//                                 sh "mvn clean install sonar:sonar"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-        stage("Docker Build & Push Image") {
+        stage('Check Changes') {
             steps {
                 script {
-                    def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
-
-                    modules.each { module ->
-                        dir("${module}") {
-                            pwd()
-                            docker.withRegistry('',DOCKER_PASS) {
-                                sh "mvn clean install jib:build"
+                    def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
+                    for (module in modules) {
+                        if (fileExists("${module}/.git")) {
+                            def changes = sh(script: "git diff --quiet HEAD~ HEAD -- ${module}", returnStatus: true)
+                            if (changes == 0) {
+                                echo "Changes detected in module: ${module}"
+                                buildModule(module)
                             }
                         }
                     }
                 }
             }
         }
-//         stage("Build & Push Docker Image") {
+//         stage("Docker Build & Push Image") {
 //             steps {
 //                 script {
 //                     def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
 //
 //                     modules.each { module ->
 //                         dir("${module}") {
-//                             def image_name = "${DOCKER_USER}/${module}"
+//                             pwd()
 //                             docker.withRegistry('',DOCKER_PASS) {
-//                                     docker_image = docker.build "${image_name}"
-//                             }
-//                             docker.withRegistry('',DOCKER_PASS) {
-//                                 docker_image.push('latest')
+//                                 sh "mvn clean install jib:build"
 //                             }
 //                         }
 //                     }
 //                 }
 //             }
 //         }
-//         stage('Run Docker Compose') {
-//             steps {
-//                 script {
-//                     dir('priajiservices') {
-//                         pwd()
-//                         docker.withRegistry('',DOCKER_PASS) {
-//                             sh "docker compose up -d"
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-        stage('Trigger CD Pipeline') {
+        stage('Pull Docker Image') {
             steps {
                 script {
-                    sh "curl -v -k --user admin:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=latest' 'http://10.2.62.221:18080/job/gitops-priajiservices/buildWithParameters?token=gitops-token'"
+                    def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
+                    for (module in modules) {
+                        sh 'docker pull ${module}:tag'
+                    }
+                }
+            }
+        }
+        stage('Run Docker Compose') {
+            steps {
+                script {
+                    dir('priajiservices') {
+                        pwd()
+                        docker.withRegistry('',DOCKER_PASS) {
+                            sh "docker compose up -d"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    def buildModule(module) {
+        stage("Build ${module}") {
+            steps {
+                dir("${module}") {
+                    docker.withRegistry('', DOCKER_PASS) {
+                        sh "mvn clean install jib:build"
+                    }
                 }
             }
         }
