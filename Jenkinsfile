@@ -8,19 +8,19 @@ pipeline {
     environment {
         DOCKER_USER = "priajiabror"
         DOCKER_PASS = 'dockerhub-aji2'
+        JENKINS_API_TOKEN = "${JENKINS_API_TOKEN}"
     }
     stages {
-        stage('Cleanup Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-
-        stage('Checkout from SCM') {
-            steps {
-                git branch: 'main', credentialsId: 'github-aji', url: 'https://github.com/fluxions-471/priajiservice.git'
-            }
-        }
+//         stage('Cleanup Workspace') {
+//             steps {
+//                 cleanWs()
+//             }
+//         }
+//         stage('Checkout from SCM') {
+//             steps {
+//                 git branch: 'main', credentialsId: 'github-aji', url: 'https://github.com/fluxions-471/priajiservice.git'
+//             }
+//         }
         stage("Build Application"){
             steps {
                 sh "mvn clean package"
@@ -43,29 +43,22 @@ pipeline {
 //                 }
 //             }
 //         }
-//         stage('Login to Docker Hub') {
-//                     steps {
-//                         withCredentials([string(credentialsId: 'dockerhub-aji', variable: 'DOCKER_HUB_TOKEN')]) {
-//                             sh "echo $DOCKER_HUB_TOKEN | docker login --username priajiabror --password-stdin"
-//                         }
-//                     }
-//                 }
         stage("Docker Build & Push Image") {
-                    steps {
-                        script {
-                            def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
+            steps {
+                script {
+                    def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
 
-                            modules.each { module ->
-                                dir("${module}") {
-                                    pwd()
-                                    docker.withRegistry('',DOCKER_PASS) {
-                                        sh "mvn clean install jib:build"
-                                    }
-                                }
+                    modules.each { module ->
+                        dir("${module}") {
+                            pwd()
+                            docker.withRegistry('',DOCKER_PASS) {
+                                sh "mvn clean install jib:build"
                             }
                         }
                     }
                 }
+            }
+        }
 //         stage("Build & Push Docker Image") {
 //             steps {
 //                 script {
@@ -85,15 +78,22 @@ pipeline {
 //                 }
 //             }
 //         }
-        stage('Run Docker Compose') {
+//         stage('Run Docker Compose') {
+//             steps {
+//                 script {
+//                     dir('priajiservices') {
+//                         pwd()
+//                         docker.withRegistry('',DOCKER_PASS) {
+//                             sh "docker compose up -d"
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+        stage('Trigger CD Pipeline') {
             steps {
                 script {
-                    dir('priajiservices') {
-                        pwd()
-                        docker.withRegistry('',DOCKER_PASS) {
-                            sh "docker compose up -d"
-                        }
-                    }
+                    sh "curl -v -k --user admin:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=latest' 'http://10.2.62.221:18080/job/gitops-priajiservices/buildWithParameters?token=gitops-token'"
                 }
             }
         }
