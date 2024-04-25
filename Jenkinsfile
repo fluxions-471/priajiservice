@@ -53,7 +53,7 @@ pipeline {
         stage('Pull Docker Image') {
             steps {
                 script {
-                    def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
+                    def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
                     dir('priajiservices'){
                         for (module in modules) {
                             docker.withRegistry('',DOCKER_PASS) {
