@@ -16,6 +16,8 @@ spec:
         - 'Authorization: Basic YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ=='
         - --header
         - 'Cookie: JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'
+        - --write-out
+        - '"%{http_code}"'
       command:
         - curl
       image: curlimages/curl:latest
