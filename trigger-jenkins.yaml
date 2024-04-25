@@ -3,7 +3,6 @@ kind: Pod
 metadata:
   name: jenkins-webhook
 spec:
-  restartPolicy: Always
   containers:
     - name: jenkins-webhook
       image: curlimages/curl:latest
