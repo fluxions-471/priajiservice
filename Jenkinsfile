@@ -13,20 +13,7 @@ pipeline {
     stages {
         stage("Build Application"){
             steps {
-                script{
-                    dir('priajiservices') {
-                        def dateFormat = new SimpleDateFormat('EEE MMM dd HH:mm:ss zzz yyyy', Locale.ENGLISH)
-                        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Jakarta"))
-
-                        def currentDate = new Date()
-                        def fileContent = currentDate.format(dateFormat)
-                        writeFile file: '/tmp/buildStart.txt', text: fileContent
-
-                        def fileDate = readFile '/tmp/buildStart.txt'
-                        echo "Build started at: ${fileDate}"
-                        sh "mvn clean package"
-                    }
-                }
+                sh "mvn clean package"
             }
         }
         stage('Check Changes || Push & Pull Docker Image') {
@@ -79,18 +66,10 @@ pipeline {
     }
     post {
         failure {
-            discordSend description: "Build # ${env.BUILD_NUMBER} - Failed within ${env.BUILD_DURATION}", enableArtifactsList: true, footer: '', image: '', link: env.BUILD_URL, result: 'FAILURE', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: env.JOB_NAME, webhookURL: DISCORD_WEBHOOK
+            discordSend description: "Build # ${env.BUILD_NUMBER} - Failed - Current time ${new Date()}", enableArtifactsList: true, footer: '', image: '', link: env.BUILD_URL, result: 'FAILURE', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: env.JOB_NAME, webhookURL: DISCORD_WEBHOOK
         }
         success {
-            script {
-                def endFormat = currentDate.format(dateFormat)
-                def endDate = new Date()
-                def tookTime = groovy.time.TimeCategory.minus(endDate, startDate).toString()
-
-                echo "Build ended at: ${endDate}"
-                echo "Build took: ${tookTime}"
-                discordSend description: "Build # ${env.BUILD_NUMBER} - Successfully completed within ${tookTime}", enableArtifactsList: true, footer: '', image: '', link: env.BUILD_URL, result: 'SUCCESS', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: env.JOB_NAME, webhookURL: DISCORD_WEBHOOK
-            }
+            discordSend description: "Build # ${env.BUILD_NUMBER} - Successfully - Current time ${new Date()}", enableArtifactsList: true, footer: '', image: '', link: env.BUILD_URL, result: 'SUCCESS', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: env.JOB_NAME, webhookURL: DISCORD_WEBHOOK
         }
     }
 }
