@@ -65,34 +65,34 @@ pipeline {
 //                     }
 //                 }
         stage("Build & Push Docker Image") {
-                    steps {
-                        script {
-                            def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
+            steps {
+                script {
+                    def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
 
-                            modules.each { module ->
-                                dir("${module}") {
-                                    def image_name = "${DOCKER_USER}/${module}"
-                                    docker.withRegistry('',DOCKER_PASS) {
-                                            docker_image = docker.build "${image_name}"
-                                    }
-                                    docker.withRegistry('',DOCKER_PASS) {
-                                        docker_image.push('latest')
-                                    }
-                                }
+                    modules.each { module ->
+                        dir("${module}") {
+                            def image_name = "${DOCKER_USER}/${module}"
+                            docker.withRegistry('',DOCKER_PASS) {
+                                    docker_image = docker.build "${image_name}"
+                            }
+                            docker.withRegistry('',DOCKER_PASS) {
+                                docker_image.push('latest')
                             }
                         }
                     }
-
                 }
-//         stage('Run Docker Compose') {
-//             steps {
-//                 script {
-//                     dir('priajiservices') {
-//                         pwd()
-//                         sh 'docker compose up -d'
-//                     }
-//                 }
-//             }
-//         }
+            }
+
+        }
+        stage('Run Docker Compose') {
+            steps {
+                script {
+                    dir('priajiservices') {
+                        pwd()
+                        sh 'docker compose up -d'
+                    }
+                }
+            }
+        }
     }
 }

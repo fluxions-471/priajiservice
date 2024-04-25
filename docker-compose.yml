@@ -43,7 +43,7 @@ services:
     networks:
       - spring
   eureka-server:
-    image: priajiabror/eureka-server:1.0-SNAPSHOT
+    image: priajiabror/eureka-server:latest
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -54,7 +54,7 @@ services:
     depends_on:
       - zipkin
   apigw:
-    image: priajiabror/apigw:1.0-SNAPSHOT
+    image: priajiabror/apigw:latest
     container_name: apigw
     ports:
       - "18083:18083"
@@ -66,7 +66,7 @@ services:
       - zipkin
       - eureka-server
   customer:
-    image: priajiabror/customer:1.0-SNAPSHOT
+    image: priajiabror/customer:latest
     container_name: customer
     ports:
       - "28080:28080"
@@ -81,7 +81,7 @@ services:
       - postgres
       - rabbitmq
   fraud:
-    image: priajiabror/fraud:1.0-SNAPSHOT
+    image: priajiabror/fraud:latest
     container_name: fraud
     ports:
       - "18081:18081"
@@ -96,7 +96,7 @@ services:
       - postgres
       - rabbitmq
   notification:
-    image: priajiabror/notification:1.0-SNAPSHOT
+    image: priajiabror/notification:latest
     container_name: notification
     ports:
       - "18082:18082"
