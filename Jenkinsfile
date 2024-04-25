@@ -23,7 +23,11 @@ pipeline {
                     for (module in modules) {
                         if (commitMessage.contains(module)) {
                             echo "Changes detected in module: ${module}"
-                            buildModule(module)
+                            dir("${module}") {
+                                docker.withRegistry('', DOCKER_PASS) {
+                                    sh "mvn clean install jib:build"
+                                }
+                            }
                         } else {
                             echo "No Changes in module: ${module}"
                         }
@@ -54,17 +58,6 @@ pipeline {
                             sh "docker compose up -d"
                         }
                     }
-                }
-            }
-        }
-    }
-}
-def buildModule(module) {
-    stage("Build ${module}") {
-        steps {
-            dir("${module}") {
-                docker.withRegistry('', DOCKER_PASS) {
-                    sh "mvn clean install jib:build"
                 }
             }
         }
