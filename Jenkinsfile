@@ -23,31 +23,45 @@ pipeline {
                 sh "mvn clean install"
             }
         }
-//         stage("Sonarqube Analysis") {
-//                     steps {
-//                         script {
-//                             def modules = ["apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
-//
-//                             modules.each { module ->
-//                                 dir("${module}") {
-//                                     pwd()
-//                                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-//                                         sh "mvn sonar:sonar"
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
         stage("Sonarqube Analysis") {
                     steps {
                         script {
-                            withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                                sh "mvn sonar:sonar"
+                            def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
+
+                            modules.each { module ->
+                                dir("${module}") {
+                                    pwd()
+                                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+                                        sh "mvn sonar:sonar"
+                                    }
+                                }
                             }
                         }
                     }
                 }
-//      mvn clean compile jib:build
+        stage("Docker Jib Build") {
+                    steps {
+                        script {
+                            def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
+
+                            modules.each { module ->
+                                dir("${module}") {
+                                    pwd()
+                                    sh "mvn clean install jib:build"
+                                }
+                            }
+                        }
+                    }
+                }
+//         stage("Sonarqube Analysis") {
+//                     steps {
+//                         script {
+//                             withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+//                                 sh "mvn sonar:sonar"
+//                             }
+//                         }
+//                     }
+//                 }
+//      mvn clean install jib:build
     }
 }
