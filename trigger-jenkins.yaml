@@ -25,4 +25,4 @@ spec:
         - name: jenkins-webhook
           image: curlimages/curl:latest
           command: ["curl"]
-          args: ["-v", "-k", "--user", "$(TOKEN)", "-X", "POST", "-H", "'cache-control: no-cache'", "-H", "'content-type: application/x-www-form-urlencoded'", "--data", "'IMAGE_TAG=latest'", "http://10.2.62.221:18080/job/gitops-priajiservices/buildWithParameters?token=argocd-token"]
+          args: ["-v", "-k", "--user", "$(TOKEN)", "-X", "POST", "-H", "'cache-control: no-cache'", "-H", "'content-type: application/x-www-form-urlencoded'", "--data", "'IMAGE_TAG=latest'", "http://10.2.62.221:18080/job/priajiservices/buildWithParameters?token=argocd-token"]
