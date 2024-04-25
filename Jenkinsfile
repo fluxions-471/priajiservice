@@ -52,8 +52,12 @@ pipeline {
             steps {
                 script {
                     def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
-                    for (module in modules) {
-                        sh "docker pull ${DOCKER_USER}/${module}:latest"
+                    dir('priajiservices'){
+                        for (module in modules) {
+                            docker.withRegistry('',DOCKER_PASS) {
+                                sh "docker pull ${DOCKER_USER}/${module}:latest"
+                            }
+                        }
                     }
                 }
             }
