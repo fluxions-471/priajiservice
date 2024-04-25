@@ -1,11 +1,12 @@
----
 apiVersion: v1
-data:
-  TOKEN: 11312a0a0096aac2316f158e26db6bee1a
 kind: ConfigMap
 metadata:
   name: jenkins-webhook-config
+data:
+  TOKEN: "admin:11312a0a0096aac2316f158e26db6bee1a"
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,17 +22,7 @@ spec:
         app: jenkins-webhook
     spec:
       containers:
-        - args:
-            - http://10.2.62.221:18080/job/priajiservices/buildWithParameters?token=argocd-token
-            - -H
-            - 'Authorization: Basic MTIzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYTo='
-          command:
-            - curl
-          env:
-            - name: TOKEN
-              valueFrom:
-                configMapKeyRef:
-                  key: TOKEN
-                  name: jenkins-webhook-config
+        - name: jenkins-webhook
           image: curlimages/curl:latest
-          name: jenkins-webhook
+          command: ["curl"]
+          args: ["-v", "-k", "--user", "$(TOKEN)", "-X", "POST", "-H", "'cache-control: no-cache'", "-H", "'content-type: application/x-www-form-urlencoded'", "--data", "'IMAGE_TAG=latest'", "http://10.2.62.221:18080/job/gitops-priajiservices/buildWithParameters?token=argocd-token"]
