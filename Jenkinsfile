@@ -46,7 +46,7 @@ pipeline {
                         }
                     }
                 }
-        stage("Docker Jib Build") {
+        stage("Docker Build & Push Image") {
                     steps {
                         script {
                             def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
@@ -56,6 +56,16 @@ pipeline {
                                     pwd()
                                     sh "mvn clean install jib:build"
                                 }
+                            }
+                        }
+                    }
+                }
+        stage('Run Docker Compose') {
+                    steps {
+                        script {
+                            dir('priajiservices') {
+                                pwd()
+                                sh 'docker-compose up -d'
                             }
                         }
                     }
