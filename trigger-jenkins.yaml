@@ -3,12 +3,9 @@ kind: Pod
 metadata:
   name: jenkins-webhook
 spec:
+  restartPolicy: Always
   containers:
     - name: jenkins-webhook
-      image: alpine:latest
-      command: ["/bin/sh"]
-      args:
-        - "-c"
-        - |
-          curl -v -k --user admin:11312a0a0096aac2316f158e26db6bee1a --max-time 10 -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=latest' http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token
-  restartPolicy: Always
+      image: curlimages/curl:latest
+      command: ["curl"]
+      args: ["-v", "-k", "--user", "admin:11312a0a0096aac2316f158e26db6bee1a", "-X", "--max-time", "10", "POST", "-H", "'cache-control: no-cache'", "-H", "'content-type: application/x-www-form-urlencoded'", "--data", "'IMAGE_TAG=latest'", "http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token"]
