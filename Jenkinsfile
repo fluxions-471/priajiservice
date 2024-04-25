@@ -23,8 +23,7 @@ pipeline {
                         writeFile file: '/tmp/buildStart.txt', text: fileContent
 
                         def fileDate = readFile '/tmp/buildStart.txt'
-                        def startDate = dateFormat.parse(fileDate)
-                        echo "Build started at: ${startDate}"
+                        echo "Build started at: ${fileDate}"
                         sh "mvn clean package"
                     }
                 }
@@ -84,8 +83,10 @@ pipeline {
         }
         success {
             script {
+                def endFormat = currentDate.format(dateFormat)
                 def endDate = new Date()
                 def tookTime = groovy.time.TimeCategory.minus(endDate, startDate).toString()
+
                 echo "Build ended at: ${endDate}"
                 echo "Build took: ${tookTime}"
                 discordSend description: "Build # ${env.BUILD_NUMBER} - Successfully completed within ${tookTime}", enableArtifactsList: true, footer: '', image: '', link: env.BUILD_URL, result: 'SUCCESS', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: env.JOB_NAME, webhookURL: DISCORD_WEBHOOK
