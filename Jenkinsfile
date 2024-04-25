@@ -16,7 +16,7 @@ pipeline {
                 script{
                     dir('priajiservices') {
                         writeFile file: '/tmp/buildStart.txt', text: new Date().toString()
-                        def startDate = new Date().parse('dd/MM/yyyy HH:mm:ss', f.text)
+                        def startDate = new Date().parse('dd/MM/yyyy HH:mm:ss', writeFile)
                         echo "Build started at: ${startDate}"
                         sh "mvn clean package"
                     }
