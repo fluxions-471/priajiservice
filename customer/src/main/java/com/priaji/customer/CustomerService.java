@@ -33,7 +33,7 @@ public class CustomerService {
         NotificationRequest notificationRequest = new NotificationRequest(
                 customer.getId(),
                 customer.getEmail(),
-                String.format("Hi %s, welcome to KB BANK...",
+                String.format("Hi %s, welcome to KB Bukopin...",
                         customer.getFirstName())
         );
 
