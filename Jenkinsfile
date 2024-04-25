@@ -15,9 +15,15 @@ pipeline {
             steps {
                 script{
                     dir('priajiservices') {
-                        writeFile file: '/tmp/buildStart.txt', text: new Date().toString()
+                        def dateFormat = new SimpleDateFormat('EEE MMM dd HH:mm:ss zzz yyyy', Locale.ENGLISH)
+                        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Jakarta"))
+
+                        def currentDate = new Date()
+                        def fileContent = currentDate.format(dateFormat)
+                        writeFile file: '/tmp/buildStart.txt', text: fileContent
+
                         def fileDate = readFile '/tmp/buildStart.txt'
-                        def startDate = new Date().parse('dd/MM/yyyy HH:mm:ss', fileDate)
+                        def startDate = dateFormat.parse(fileDate)
                         echo "Build started at: ${startDate}"
                         sh "mvn clean package"
                     }
