@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         DOCKER_USER = "priajiabror"
-        DOCKER_PASS = credentials("docker-aji")
+        DOCKER_PASS = 'dockerhub-aji2'
         JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
     stages {
@@ -72,9 +72,7 @@ pipeline {
 
                             modules.each { module ->
                                 dir("${module}") {
-                                    def app_name = ${module}
-                                    def image_name = "${DOCKER_USER}/${APP_NAME}"
-                                    def image_tag = "latest"
+                                    def image_name = "${DOCKER_USER}/${module}"
                                     docker.withRegistry('',DOCKER_PASS) {
                                             docker_image = docker.build "${image_name}"
                                     }
