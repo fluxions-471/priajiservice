@@ -1,16 +1,5 @@
 ---
 apiVersion: v1
-kind: Service
-metadata:
-  name: jenkins-webhook
-spec:
-  externalName: http://10.2.62.221:18080/job/priajiservices/buildWithParameters?token=argocd-token
-  ports:
-    - port: 80
-      targetPort: 18080
-  type: ExternalName
----
-apiVersion: v1
 data:
   TOKEN: 11312a0a0096aac2316f158e26db6bee1a
 kind: ConfigMap
@@ -32,9 +21,12 @@ spec:
         app: jenkins-webhook
     spec:
       containers:
-        - command:
-            - /bin/sleep
-            - infinity
+        - args:
+            - http://10.2.62.221:18080/job/priajiservices/buildWithParameters?token=argocd-token
+            - -H
+            - 'Authorization: Basic MTIzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYTo='
+          command:
+            - curl
           env:
             - name: TOKEN
               valueFrom:
