@@ -21,12 +21,12 @@ pipeline {
                     def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
                     def commitMessage = sh(script: "git log --pretty=format:\"%h %s\" | head -n 1", returnStdout: true).trim()
                     for (module in modules) {
-                            if (commitMessage.contains(module) {
-                                echo "Changes detected in module: ${module}"
-                                buildModule(module)
-                            } else {
-                                echo "No Changes in module: ${module}"
-                            }
+                        if (commitMessage.contains(module)) {
+                            echo "Changes detected in module: ${module}"
+                            buildModule(module)
+                        } else {
+                            echo "No Changes in module: ${module}"
+                        }
                     }
                 }
             }
