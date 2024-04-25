@@ -1,21 +1,18 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: jenkins-webhook
+  name: curl-webhook
 spec:
   containers:
-    - name: jenkins-webhook
-      image: alpine:latest
-      command: ["/bin/sh"]
+    - name: curl-webhook
+      image: curlimages/curl:latest
+      command: ["sh", "-c"]
       args:
-        - "-c"
-        - |
-          wget --quiet --method=POST --timeout=10 --header='cache-control: no-cache' --header='content-type: application/x-www-form-urlencoded' --body-data='IMAGE_TAG=latest' --output-document=/dev/null http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token
-          exit_code=$?
-          if [ $exit_code -eq 0 ]; then
-            echo "HTTP 201 - Build completed successfully"
-          else
-            echo "Failed to access URL. Exit code: $exit_code"
-            exit $exit_code
-          fi
+        - "response_code=$(curl -v -k --user admin:11312a0a0096aac2316f158e26db6bee1a --max-time 10 -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=latest' -o /tmp/response_code.txt -w '%{http_code}' http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token); if [ \"$response_code\" == \"201\" ]; then echo 'HTTP 201 - Build completed successfully'; else echo \"HTTP $response_code - Build failed or incomplete\"; fi"
+      volumeMounts:
+        - name: tmp-volume
+          mountPath: /tmp
   restartPolicy: Never
+  volumes:
+    - name: tmp-volume
+      emptyDir: {}
