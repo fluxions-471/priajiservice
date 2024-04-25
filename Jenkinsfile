@@ -16,7 +16,7 @@ pipeline {
                 sh "mvn clean package"
             }
         }
-        stage('Check Changes') {
+        stage('Check Changes || Push & Pull Docker Image') {
             steps {
                 script {
                     def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
@@ -27,6 +27,7 @@ pipeline {
                             dir("${module}") {
                                 docker.withRegistry('', DOCKER_PASS) {
                                     sh "mvn clean install jib:build"
+                                    docker.image("${DOCKER_USER}/${module}:latest").pull()
                                 }
                             }
                         } else {
@@ -36,20 +37,20 @@ pipeline {
                 }
             }
         }
-        stage('Pull Docker Image') {
-            steps {
-                script {
-                    def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
-                    dir('priajiservices'){
-                        for (module in modules) {
-                            docker.withRegistry('',DOCKER_PASS) {
-                                docker.image("${DOCKER_USER}/${module}:latest").pull()
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//         stage('Pull Docker Image') {
+//             steps {
+//                 script {
+//                     def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
+//                     dir('priajiservices'){
+//                         for (module in modules) {
+//                             docker.withRegistry('',DOCKER_PASS) {
+//                                 docker.image("${DOCKER_USER}/${module}:latest").pull()
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
         stage('Run Docker Compose') {
             steps {
                 script {
@@ -65,10 +66,10 @@ pipeline {
     }
     post {
         failure {
-                discordSend description: 'Build Failure env.JOB_NAME', footer: '', image: '', link: '', result: 'FAILURE', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: 'Jenkins - priajiservice', webhookURL: DISCORD_WEBHOOK
+                discordSend description: 'Build Failure ${env.JOB_NAME}', footer: '', image: '', link: '${env.BUILD_URL}', result: 'FAILURE', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: 'Jenkins - priajiservice', webhookURL: DISCORD_WEBHOOK
         }
         success {
-               discordSend description: 'Build Success env.JOB_NAME', footer: '', image: '', link: '', result: 'SUCCESS', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: 'Jenkins - priajiservice', webhookURL: DISCORD_WEBHOOK
+               discordSend description: 'Build Success ${env.JOB_NAME}', footer: '', image: '', link: '${env.BUILD_URL}', result: 'SUCCESS', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: 'Jenkins - priajiservice', webhookURL: DISCORD_WEBHOOK
         }
     }
 }
