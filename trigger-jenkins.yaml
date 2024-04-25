@@ -4,6 +4,7 @@ metadata:
   name: curl-pod
 spec:
   containers:
+  restartPolicy: Never
     - args:
         - --silent
         - --output
