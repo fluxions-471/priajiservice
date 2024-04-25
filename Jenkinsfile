@@ -71,13 +71,13 @@ pipeline {
             }
         }
     }
-    def buildModule(module) {
-        stage("Build ${module}") {
-            steps {
-                dir("${module}") {
-                    docker.withRegistry('', DOCKER_PASS) {
-                        sh "mvn clean install jib:build"
-                    }
+}
+def buildModule(module) {
+    stage("Build ${module}") {
+        steps {
+            dir("${module}") {
+                docker.withRegistry('', DOCKER_PASS) {
+                    sh "mvn clean install jib:build"
                 }
             }
         }
