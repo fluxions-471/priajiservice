@@ -8,7 +8,6 @@ pipeline {
     environment {
         DOCKER_USER = "priajiabror"
         DOCKER_PASS = 'dockerhub-aji2'
-        JENKINS_API_TOKEN = credentials('JENKINS_API_TOKEN')
     }
     stages {
         stage("Build Application"){
@@ -20,36 +19,18 @@ pipeline {
             steps {
                 script {
                     def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
+                    def commitMessage = sh(script: "git log --pretty=format:\"%h %s\" | head -n 1", returnStdout: true).trim()
                     for (module in modules) {
-                        if (fileExists("${module}/.git")) {
-                            def changes = sh(script: "git diff --quiet HEAD~ HEAD -- ${module}", returnStatus: true)
-                            if (changes == 0) {
+                            if (commitMessage.contains(module) {
                                 echo "Changes detected in module: ${module}"
                                 buildModule(module)
                             } else {
                                 echo "No Changes in module: ${module}"
                             }
-                        }
                     }
                 }
             }
         }
-//         stage("Docker Build & Push Image") {
-//             steps {
-//                 script {
-//                     def modules = ["apigw", "customer", "eureka-server", "fraud", "notification"]
-//
-//                     modules.each { module ->
-//                         dir("${module}") {
-//                             pwd()
-//                             docker.withRegistry('',DOCKER_PASS) {
-//                                 sh "mvn clean install jib:build"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         }
         stage('Pull Docker Image') {
             steps {
                 script {
@@ -57,7 +38,6 @@ pipeline {
                     dir('priajiservices'){
                         for (module in modules) {
                             docker.withRegistry('',DOCKER_PASS) {
-//                                 sh "docker pull ${DOCKER_USER}/${module}:latest"
                                 docker.image("${DOCKER_USER}/${module}:latest").pull()
                             }
                         }
