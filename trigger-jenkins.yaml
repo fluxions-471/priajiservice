@@ -4,10 +4,11 @@ metadata:
   name: curl-pod
 spec:
   containers:
-    - args:
+    - name: curl-container
+      args:
         - --silent
         - --output
-        - '/dev/null'
+        - '/tmp/http_code'
         - --location
         - --request
         - POST
@@ -17,8 +18,26 @@ spec:
         - --header
         - 'Cookie: JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'
         - --write-out
-        - '"%{http_code}"'
+        - '%{http_code}'
       command:
         - curl
       image: curlimages/curl:latest
-      name: curl-container
+   - name: action-container
+     image: alpine:latest
+     command: [ "/bin/sh" ]
+     args:
+       - "-c"
+       - |
+         if [ -f "/tmp/http_code" ]; then
+           HTTP_STATUS=$(cat "/tmp/http_code")
+           if [ "$HTTP_STATUS" = "201" ]; then
+             echo "HTTP 201 - Build completed successfully"
+             # Tambahkan tindakan tambahan di sini jika diperlukan
+           else
+             echo "HTTP $HTTP_STATUS - Build failed or incomplete"
+             # Tambahkan tindakan tambahan di sini jika diperlukan
+           fi
+         else
+           echo "Error: HTTP code file not found"
+           exit 1
+         fi
