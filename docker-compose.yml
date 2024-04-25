@@ -57,7 +57,7 @@ services:
     image: priajiabror/apigw:latest
     container_name: apigw
     ports:
-      - "18083:18083"
+      - "88083:88083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
@@ -69,7 +69,7 @@ services:
     image: priajiabror/customer:latest
     container_name: customer
     ports:
-      - "28080:28080"
+      - "88080:88080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
@@ -84,7 +84,7 @@ services:
     image: priajiabror/fraud:latest
     container_name: fraud
     ports:
-      - "18081:18081"
+      - "88081:88081"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
@@ -99,7 +99,7 @@ services:
     image: priajiabror/notification:latest
     container_name: notification
     ports:
-      - "18082:18082"
+      - "88082:88082"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:

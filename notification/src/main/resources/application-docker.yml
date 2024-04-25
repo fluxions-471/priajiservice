@@ -1,5 +1,5 @@
 server:
-  port: 18082
+  port: 88082
 spring:
   application:
     name: notification
