@@ -39,6 +39,13 @@ pipeline {
                         }
                     }
                 }
+        stage('Login to Docker Hub') {
+                    steps {
+                        withCredentials([string(credentialsId: 'dockerhub-aji', variable: 'DOCKER_HUB_TOKEN')]) {
+                            sh "echo $DOCKER_HUB_TOKEN | docker login --username priajiabror --password-stdin"
+                        }
+                    }
+                }
         stage("Docker Jib Build") {
                     steps {
                         script {
