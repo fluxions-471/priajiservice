@@ -10,7 +10,7 @@ spring:
     gateway:
       routes:
         - id: customer
-          uri:
+          uri: lb://CUSTOMER
           predicates:
             - Path=/api/v1/customers/**
 
