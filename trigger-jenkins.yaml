@@ -7,4 +7,6 @@ spec:
     - name: curl-container
       image: curlimages/curl:latest
       command: ["curl"]
-      args: ["--silent" , "--location", "--request", "POST", "http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token", "--header", "Authorization: Basic YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ==", "--header", "Cookie: JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0"]
+      args: ["--location --request POST 'http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token' \
+--header 'Authorization: Basic YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ==' \
+--header 'Cookie: JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'"]
