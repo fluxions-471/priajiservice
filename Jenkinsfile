@@ -26,6 +26,8 @@ pipeline {
                             if (changes == 0) {
                                 echo "Changes detected in module: ${module}"
                                 buildModule(module)
+                            } else {
+                                echo "No Changes in module: ${module}"
                             }
                         }
                     }
