@@ -66,26 +66,10 @@ pipeline {
     }
     post {
         failure {
-          discordSend(
-              webhookURL: env.DISCORD_WEBHOOK_URL,
-              title: 'Jenkins - priajiservice',
-              description: "Build Success ${env.JOB_NAME}",
-              result: 'SUCCESS',
-              scmWebUrl: 'https://github.com/fluxions-471/priajiservice',
-              showChangeset: true,
-              link: env.BUILD_URL
-          )
+            discordSend description: "Build Failure ${env.JOB_NAME}", footer: '', image: '', link: env.BUILD_URL, result: 'FAILURE', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: 'Jenkins - priajiservice', webhookURL: DISCORD_WEBHOOK
         }
         success {
-           discordSend(
-               webhookURL: env.DISCORD_WEBHOOK_URL,
-               title: 'Jenkins - priajiservice',
-               description: "Build Success ${env.JOB_NAME}",
-               result: 'SUCCESS',
-               scmWebUrl: 'https://github.com/fluxions-471/priajiservice',
-               showChangeset: true,
-               link: env.BUILD_URL
-           )
+            discordSend description: "Build Success ${env.JOB_NAME}", footer: '', image: '', link: env.BUILD_URL, result: 'SUCCESS', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: 'Jenkins - priajiservice', webhookURL: DISCORD_WEBHOOK
         }
     }
 }
