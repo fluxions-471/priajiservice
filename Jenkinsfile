@@ -18,11 +18,11 @@ pipeline {
             }
         }
 
-        stage('Build Application') {
-            steps {
-                sh "mvn clean install"
-            }
-        }
+//         stage('Build Application') {
+//             steps {
+//                 sh "mvn clean install"
+//             }
+//         }
         stage("Sonarqube Analysis") {
                     steps {
                         script {
@@ -65,20 +65,10 @@ pipeline {
                         script {
                             dir('priajiservices') {
                                 pwd()
-                                sh 'docker-compose up -d'
+                                sh 'docker compose up -d'
                             }
                         }
                     }
                 }
-//         stage("Sonarqube Analysis") {
-//                     steps {
-//                         script {
-//                             withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-//                                 sh "mvn sonar:sonar"
-//                             }
-//                         }
-//                     }
-//                 }
-//      mvn clean install jib:build
     }
 }
