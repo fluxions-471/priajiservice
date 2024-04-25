@@ -58,7 +58,7 @@ pipeline {
                         for (module in modules) {
                             docker.withRegistry('',DOCKER_PASS) {
 //                                 sh "docker pull ${DOCKER_USER}/${module}:latest"
-                                docker.image('${module}/amqp:latest').pull()
+                                docker.image("${DOCKER_USER}/${module}:latest").pull()
                             }
                         }
                     }
