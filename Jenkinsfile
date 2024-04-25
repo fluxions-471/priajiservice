@@ -13,9 +13,11 @@ pipeline {
     stages {
         stage("Build Application"){
             steps {
-                def f = new File("/tmp/buildStart.txt")
-                def startDate = new Date().parse('dd/MM/yyyy HH:mm:ss',f.text)
-                sh "mvn clean package"
+                script {
+                     def f = new File("/tmp/buildStart.txt")
+                     def startDate = new Date().parse('dd/MM/yyyy HH:mm:ss',f.text)
+                     sh "mvn clean package"
+                }
             }
         }
         stage('Check Changes || Push & Pull Docker Image') {
@@ -71,8 +73,10 @@ pipeline {
             discordSend description: "Build # ${env.BUILD_NUMBER} - Failed within ${env.BUILD_DURATION}", enableArtifactsList: true, footer: '', image: '', link: env.BUILD_URL, result: 'FAILURE', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: env.JOB_NAME, webhookURL: DISCORD_WEBHOOK
         }
         success {
-            def endDate = new Date()
-            def tookTime = groovy.time.TimeCategory.minus(endDate,startDate).toString()
+            script{
+                def endDate = new Date()
+                def tookTime = groovy.time.TimeCategory.minus(endDate,startDate).toString()
+            }
             discordSend description: "Build # ${env.BUILD_NUMBER} - Successfully completed within ${tookTime}", enableArtifactsList: true, footer: '', image: '', link: env.BUILD_URL, result: 'SUCCESS', scmWebUrl: 'https://github.com/fluxions-471/priajiservice', showChangeset: true, thumbnail: '', title: env.JOB_NAME, webhookURL: DISCORD_WEBHOOK
         }
     }
