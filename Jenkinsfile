@@ -55,7 +55,8 @@ pipeline {
                     dir('priajiservices'){
                         for (module in modules) {
                             docker.withRegistry('',DOCKER_PASS) {
-                                sh "docker pull ${DOCKER_USER}/${module}:latest"
+//                                 sh "docker pull ${DOCKER_USER}/${module}:latest"
+                                docker.image('${DOCKER_USER}/amqp:latest').pull()
                             }
                         }
                     }
