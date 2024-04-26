@@ -1,0 +1,26 @@
+server:
+  port: 18084
+spring:
+  application:
+    name: security
+  datasource:
+    password: password
+    url: jdbc:postgresql://postgres:5432/security
+    username: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+  zipkin:
+    base-url: http://zipkin:9411
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true

@@ -13,6 +13,29 @@ spring:
           uri: lb://CUSTOMER
           predicates:
             - Path=/api/v1/customers/**
+          filters:
+            - AuthenticationFilter
+
+        - id: fraud
+          uri: lb://FRAUD
+          predicates:
+            - Path=/api/v1/fraud-check/**
+          filters:
+            - AuthenticationFilter
+
+        - id: notification
+          uri: lb://NOTIFICATION
+          predicates:
+            - Path=/api/v1/notification/**
+          filters:
+            - AuthenticationFilter
+
+        - id: security
+          uri: lb://SECURITY
+          predicates:
+            - Path=/auth/**
+          filters:
+            - AuthenticationFilter
 
 eureka:
   client:

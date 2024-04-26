@@ -25,7 +25,7 @@ pipeline {
         stage('Check Changes || Push & Pull Docker Image') {
             steps {
                 script {
-                    def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification"]
+                    def modules = ["amqp", "apigw", "clients", "customer", "eureka-server", "fraud", "notification", "security"]
                     def commitMessage = sh(script: "git log --pretty=format:\"%h %s\" | head -n 1", returnStdout: true).trim()
                     for (module in modules) {
                         if (commitMessage.contains(module)) {

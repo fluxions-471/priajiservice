@@ -68,6 +68,20 @@ services:
     depends_on:
       - zipkin
       - eureka-server
+  security:
+    image: priajiabror/security:latest
+    container_name: security
+    ports:
+      - "18084:18084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - eureka-server
+      - postgres
   customer:
     image: priajiabror/customer:latest
     container_name: customer
