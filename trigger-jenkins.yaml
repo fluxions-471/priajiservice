@@ -17,7 +17,7 @@ spec:
         call: default
         octopusexport: OctopusExport
     spec:
-      dnsPolicy: None
+      dnsPolicy: ClusterFirst
       containers:
         - name: curl
           image: 'curlimages/curl:latest'
