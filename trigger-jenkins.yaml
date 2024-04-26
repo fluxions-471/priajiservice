@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/instance: my-release
     app.kubernetes.io/managed-by: Helm
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "*/30 * * * *"
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 1
   startingDeadlineSeconds: 120
