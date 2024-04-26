@@ -10,14 +10,14 @@ spec:
       octopusexport: OctopusExport
   replicas: 1
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       labels:
         call: default
         octopusexport: OctopusExport
     spec:
-      dnsPolicy: ClusterFirst
+      dnsPolicy: Default
       containers:
         - name: curl
           image: 'curlimages/curl:latest'
@@ -29,44 +29,26 @@ spec:
               memory: 256Mi
               cpu: 100m
           startupProbe:
-#            failureThreshold: 1
-#            successThreshold: 1
+            failureThreshold: 1
+            successThreshold: 1
             exec:
               command:
                 - curl
-                - --silent
-                - --output
-                - '/tmp/http_code'
-                - --location
-                - --request
+                - '--silent'
+                - '--output'
+                - /tmp/http_code
+                - '--location'
+                - '--request'
                 - POST
-                - http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token
-                - --header
-                - 'Authorization: Basic YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ=='
-                - --header
-                - 'Cookie: JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'
-                - --write-out
+                - >-
+                  http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token
+                - '--header'
+                - >-
+                  Authorization: Basic
+                  YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ==
+                - '--header'
+                - >-
+                  Cookie:
+                  JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0
+                - '--write-out'
                 - '%{http_code}'
-#          lifecycle:
-#            postStart:
-#              exec:
-#                command:
-#                  - >-
-#                    curl --location --request POST
-#                    'http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token'
-#                    --header 'Authorization: Basic
-#                    YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ=='
-#                    --header 'Cookie:
-#                    JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'
-#      affinity:
-#        podAntiAffinity:
-#          preferredDuringSchedulingIgnoredDuringExecution:
-#            - weight: 100
-#              podAffinityTerm:
-#                labelSelector:
-#                  matchExpressions:
-#                    - key: app
-#                      operator: In
-#                      values:
-#                        - web
-#                topologyKey: kubernetes.io/hostname
