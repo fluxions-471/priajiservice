@@ -29,8 +29,8 @@ spec:
               memory: 256Mi
               cpu: 100m
           startupProbe:
-            failureThreshold: 1
-            successThreshold: 1
+#            failureThreshold: 1
+#            successThreshold: 1
             exec:
               command:
                 - curl
@@ -58,15 +58,15 @@ spec:
 #                    YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ=='
 #                    --header 'Cookie:
 #                    JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                    - key: app
-                      operator: In
-                      values:
-                        - web
-                topologyKey: kubernetes.io/hostname
+#      affinity:
+#        podAntiAffinity:
+#          preferredDuringSchedulingIgnoredDuringExecution:
+#            - weight: 100
+#              podAffinityTerm:
+#                labelSelector:
+#                  matchExpressions:
+#                    - key: app
+#                      operator: In
+#                      values:
+#                        - web
+#                topologyKey: kubernetes.io/hostname
