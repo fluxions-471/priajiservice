@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: call-jenkins
   labels:
-    call: jenkins
+    call: default
 spec:
   selector:
     matchLabels:
@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       labels:
-        call: jenkins
+        call: default
         octopusexport: OctopusExport
     spec:
       dnsPolicy: None
