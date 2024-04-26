@@ -34,6 +34,7 @@ services:
       - "9411:9411"
     networks:
       - spring
+    restart: unless-stopped
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
     container_name: rabbitmq
@@ -42,6 +43,7 @@ services:
       - "15672:15672"
     networks:
       - spring
+    restart: unless-stopped
   eureka-server:
     image: priajiabror/eureka-server:latest
     container_name: eureka-server
@@ -53,6 +55,7 @@ services:
       - spring
     depends_on:
       - zipkin
+    restart: unless-stopped
   apigw:
     image: priajiabror/apigw:latest
     container_name: apigw
