@@ -1,35 +1,60 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: call-jenkins
-  namespace: default
+  labels:
+    call: jenkins
 spec:
-  ttlSecondsAfterFinished: 10 # deleted the finished pod after 2 minutes
-  backoffLimit: 6 # default value
-  parallelism: 2
-  completions: 3
+  selector:
+    matchLabels:
+      octopusexport: OctopusExport
+  replicas: 1
+  strategy:
+    type: RollingUpdate
   template:
+    metadata:
+      labels:
+        call: jenkins
+        octopusexport: OctopusExport
     spec:
-      restartPolicy: Never
+      dnsPolicy: None
       containers:
         - name: curl
-          image: curlimages/curl:latest
-          imagePullPolicy: Always
-          command:
-#            - "/bin/bash"
-#            - "-c"
-#            - curl
-#            - -silent
-#            - -output
-#            - '/tmp/http_code'
-#            - -location
-#            - -request
-#            - POST
-#            - http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token
-#            - -header
-#            - 'Authorization: Basic YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ=='
-#            - -header
-#            - 'Cookie: JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'
-#            - -write-out
-#            - '%{http_code}'
-            - "curl --location --request POST 'http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token' --header 'Authorization: Basic YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ==' --header 'Cookie: JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'"
+          image: 'curlimages/curl:latest'
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 10m
+            limits:
+              memory: 256Mi
+              cpu: 100m
+          startupProbe:
+            failureThreshold: 1
+            successThreshold: 1
+            exec:
+              command:
+                - cat
+                - tmp/healthy
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - >-
+                    curl --location --request POST
+                    'http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token'
+                    --header 'Authorization: Basic
+                    YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ=='
+                    --header 'Cookie:
+                    JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - web
+                topologyKey: kubernetes.io/hostname
