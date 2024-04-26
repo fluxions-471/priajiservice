@@ -16,8 +16,8 @@ spec:
           image: curlimages/curl:latest
           imagePullPolicy: Always
           command:
-            - "/bin/bash"
-            - "-c"
+#            - "/bin/bash"
+#            - "-c"
             - curl
             - -silent
             - -output
