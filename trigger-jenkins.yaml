@@ -1,22 +1,39 @@
-apiVersion: apps/v1
-kind: Deployment
+---
+# Source: cron-job/templates/cronJob.yaml
+apiVersion: batch/v1
+kind: CronJob
 metadata:
-  name: priajiservice
+  name: call-jenkins
+  namespace: default
+  labels:
+    helm.sh/chart: cron-job-0.57.0
+    app.kubernetes.io/name: cron-job
+    app.kubernetes.io/instance: my-release
+    app.kubernetes.io/managed-by: Helm
 spec:
-  selector:
-    matchLabels:
-      app: priajiservice
-  template:
-    metadata:
-      labels:
-        app: priajiservice
+  schedule: "*/30 * * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  startingDeadlineSeconds: 120
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
     spec:
-      containers:
-        - name: priajiservice
-          image: priajiabror/eureka-server:latest
-          command:
-            - /bin/sh
-            - -c
-#            - "curl --location --request POST 'http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token' --header 'Authorization: Basic YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ==' --header 'Cookie: JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'"
-          ports:
-            - containerPort: 8761
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: my-release
+              image: "curlimages/curl:latest"
+              command:
+                - /bin/sh
+                - -c
+                - "curl --location --request POST 'http://10.2.62.221:18080/job/priajiservices/build?token=argocd-token' --header 'Authorization: Basic YWRtaW46MTEzMTJhMGEwMDk2YWFjMjMxNmYxNThlMjZkYjZiZWUxYQ==' --header 'Cookie: JSESSIONID.eeba1ccf=node01wdndnnmvb9l0x1orax5wn0fn6.node0'"
+
+
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 256Mi
+                requests:
+                  cpu: 10m
+                  memory: 64Mi

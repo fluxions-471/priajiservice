@@ -13,7 +13,13 @@ pipeline {
     stages {
         stage("Build Application"){
             steps {
-                sh "mvn clean package"
+                script{
+                    def commitMessage1 = sh(script: "git --no-pager log --pretty=format:\"%h %s\" --since=\"1 minute ago\" --until=\"now\" -n 1", returnStdout: true).trim()
+                    echo "Commit Message is : ${commitMessage1}"
+                    if (commitMessage1 != null){
+                        sh "mvn clean package"
+                    }
+                }
             }
         }
         stage('Check Changes || Push & Pull Docker Image') {
