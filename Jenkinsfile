@@ -9,6 +9,7 @@ pipeline {
         DOCKER_USER = "priajiabror"
         DOCKER_PASS = 'dockerhub-aji2'
         DISCORD_WEBHOOK = credentials('discord-webhook')
+        DOCKER_PASS2 = 'docker-pass'
     }
     stages {
         stage("Build Application"){
@@ -33,6 +34,8 @@ pipeline {
                             dir("${module}") {
                                 docker.withRegistry('', DOCKER_PASS) {
                                     sh "mvn clean install jib:build"
+                                }
+                                docker.withRegistry('', DOCKER_PASS) {
                                     docker.image("${DOCKER_USER}/${module}:latest").pull()
                                 }
                             }
