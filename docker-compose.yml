@@ -1,18 +1,18 @@
 services:
-  postgres:
-    container_name: postgres
-    image: postgres
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres
-    volumes:
-      - postgres:/data/postgres
-    ports:
-      - "5432:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
+#  postgres:
+#    container_name: postgres
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: admin
+#      POSTGRES_PASSWORD: password
+#      PGDATA: /data/postgres
+#    volumes:
+#      - postgres:/data/postgres
+#    ports:
+#      - "5432:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -24,109 +24,124 @@ services:
       - pgadmin:/var/lib/pgadmin
     ports:
       - "5050:80"
+    extra_hosts:
+      - "postgres:192.168.212.128"
+      - "zipkin:192.168.212.128"
+      - "rabbitmq:192.168.212.128"
     networks:
       - postgres
     restart: unless-stopped
-  zipkin:
-    image: openzipkin/zipkin
-    container_name: zipkin
-    ports:
-      - "9411:9411"
-    networks:
-      - spring
-    restart: unless-stopped
-  rabbitmq:
-    image: rabbitmq:3.9.11-management-alpine
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    networks:
-      - spring
-    restart: unless-stopped
+#  zipkin:
+#    image: openzipkin/zipkin
+#    container_name: zipkin
+#    ports:
+#      - "9411:9411"
+#    networks:
+#      - spring
+#    restart: unless-stopped
+#  rabbitmq:
+#    image: rabbitmq:3.9.11-management-alpine
+#    container_name: rabbitmq
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    networks:
+#      - spring
+#    restart: unless-stopped
   eureka-server:
     image: priajiabror/eureka-server:latest
     container_name: eureka-server
     ports:
       - "8761:8761"
+    extra_hosts:
+      - "postgres:192.168.212.128"
+      - "zipkin:192.168.212.128"
+      - "rabbitmq:192.168.212.128"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
     depends_on:
-      - zipkin
     restart: unless-stopped
   apigw:
     image: priajiabror/apigw:latest
     container_name: apigw
     ports:
       - "18083:18083"
+    extra_hosts:
+      - "postgres:192.168.212.128"
+      - "zipkin:192.168.212.128"
+      - "rabbitmq:192.168.212.128"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
     depends_on:
-      - zipkin
       - eureka-server
   security:
     image: priajiabror/security:latest
     container_name: security
     ports:
       - "18084:18084"
+    extra_hosts:
+      - "postgres:192.168.212.128"
+      - "zipkin:192.168.212.128"
+      - "rabbitmq:192.168.212.128"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
       - postgres
     depends_on:
-      - zipkin
       - eureka-server
-      - postgres
   customer:
     image: priajiabror/customer:latest
     container_name: customer
     ports:
       - "28080:28080"
+    extra_hosts:
+      - "postgres:192.168.212.128"
+      - "zipkin:192.168.212.128"
+      - "rabbitmq:192.168.212.128"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
       - postgres
     depends_on:
-      - zipkin
       - eureka-server
-      - postgres
-      - rabbitmq
   fraud:
     image: priajiabror/fraud:latest
     container_name: fraud
     ports:
       - "18081:18081"
+    extra_hosts:
+      - "postgres:192.168.212.128"
+      - "zipkin:192.168.212.128"
+      - "rabbitmq:192.168.212.128"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
       - postgres
     depends_on:
-      - zipkin
       - eureka-server
-      - postgres
-      - rabbitmq
   notification:
     image: priajiabror/notification:latest
     container_name: notification
     ports:
       - "18082:18082"
+    extra_hosts:
+      - "postgres:192.168.212.128"
+      - "zipkin:192.168.212.128"
+      - "rabbitmq:192.168.212.128"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
       - postgres
     depends_on:
-      - zipkin
       - eureka-server
-      - postgres
-      - rabbitmq
 networks:
   postgres:
     driver: bridge
