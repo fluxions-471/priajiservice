@@ -61,7 +61,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
-    depends_on:
+#    depends_on:
     restart: unless-stopped
   apigw:
     image: priajiabror/apigw:latest
