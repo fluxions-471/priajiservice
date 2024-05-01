@@ -13,24 +13,24 @@ services:
 #    networks:
 #      - postgres
 #    restart: unless-stopped
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    ports:
-      - "5050:80"
-    extra_hosts:
-      - "postgres:192.168.212.128"
-      - "zipkin:192.168.212.128"
-      - "rabbitmq:192.168.212.128"
-    networks:
-      - postgres
-    restart: unless-stopped
+#  pgadmin:
+#    container_name: pgadmin
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+#      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+#      PGADMIN_CONFIG_SERVER_MODE: 'False'
+#    volumes:
+#      - pgadmin:/var/lib/pgadmin
+#    ports:
+#      - "5050:80"
+#    extra_hosts:
+#      - "postgres:192.168.212.128"
+#      - "zipkin:192.168.212.128"
+#      - "rabbitmq:192.168.212.128"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
 #  zipkin:
 #    image: openzipkin/zipkin
 #    container_name: zipkin
@@ -78,6 +78,7 @@ services:
       - spring
     depends_on:
       - eureka-server
+    restart: unless-stopped
   security:
     image: priajiabror/security:latest
     container_name: security
@@ -94,6 +95,7 @@ services:
       - postgres
     depends_on:
       - eureka-server
+    restart: unless-stopped
   customer:
     image: priajiabror/customer:latest
     container_name: customer
@@ -110,6 +112,7 @@ services:
       - postgres
     depends_on:
       - eureka-server
+    restart: unless-stopped
   fraud:
     image: priajiabror/fraud:latest
     container_name: fraud
@@ -126,6 +129,7 @@ services:
       - postgres
     depends_on:
       - eureka-server
+    restart: unless-stopped
   notification:
     image: priajiabror/notification:latest
     container_name: notification
@@ -142,12 +146,13 @@ services:
       - postgres
     depends_on:
       - eureka-server
+    restart: unless-stopped
 networks:
   postgres:
     driver: bridge
   spring:
     driver: bridge
 
-volumes:
-  postgres:
-  pgadmin:
+#volumes:
+#  postgres:
+#  pgadmin:
