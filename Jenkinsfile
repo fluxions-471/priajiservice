@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         DOCKER_USER = "priajiabror"
-        DOCKER_PASS = 'dockerhub-aji2'
+        DOCKER_PASS = 'docker-hub'
         DISCORD_WEBHOOK = credentials('discord-webhook')
         DOCKER_PASS2 = 'docker-pass'
     }
@@ -52,18 +52,18 @@ pipeline {
 //                 }
 //             }
 //         }
-        stage('Run Docker Compose') {
-            steps {
-                script {
-                    dir('priajiservices') {
-                        pwd()
-                        docker.withRegistry('',DOCKER_PASS) {
-                            sh "docker compose up -d"
-                        }
-                    }
-                }
-            }
-        }
+//         stage('Run Docker Compose') {
+//             steps {
+//                 script {
+//                     dir('priajiservices') {
+//                         pwd()
+//                         docker.withRegistry('',DOCKER_PASS) {
+//                             sh "docker compose up -d"
+//                         }
+//                     }
+//                 }
+//             }
+//         }
     }
     post {
         failure {
