@@ -28,7 +28,7 @@ pipeline {
                             dir("${module}") {
                                 docker.withRegistry('', DOCKER_PASS) {
                                     sh "mvn clean install jib:build"
-                                    docker.image("${DOCKER_USER}/${module}:latest").pull()
+//                                     docker.image("${DOCKER_USER}/${module}:latest").pull()
                                 }
                             }
                         } else {

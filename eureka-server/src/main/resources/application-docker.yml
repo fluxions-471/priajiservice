@@ -8,6 +8,10 @@ server:
   port: 8761
 
 eureka:
+  instance:
+    hostname: 192.168.174.141
   client:
     fetch-registry: false
     register-with-eureka: false
+    serviceUrl:
+      serviceUrl: http://192.168.174.141:8761/eureka/
