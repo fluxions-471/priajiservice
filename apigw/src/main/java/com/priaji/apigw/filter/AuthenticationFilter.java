@@ -45,7 +45,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 try {
                     log.info("Masuk sini yaaa");
 //                    //REST call to AUTH service
-                    System.out.println("Hasil hit : " + template.getForObject("lb://SECURITY/validate?token" + authHeader, String.class));
+//                    System.out.println("Hasil hit : " + template.getForObject("lb://SECURITY/validate?token" + authHeader, String.class));
                     jwtUtil.validateToken(authHeader);
 
                 } catch (Exception e) {
