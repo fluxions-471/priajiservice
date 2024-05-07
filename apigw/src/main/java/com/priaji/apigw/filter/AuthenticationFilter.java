@@ -2,7 +2,6 @@ package com.priaji.apigw.filter;
 
 
 import com.priaji.apigw.util.JwtUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@Slf4j
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
     private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
@@ -45,9 +43,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     authHeader = authHeader.substring(7);
                 }
                 try {
-//                    log.info("Masuk sini yaaa");
+                    log.info("Masuk sini yaaa");
 //                    //REST call to AUTH service
-//                    System.out.println("Hasil hit : " + template.getForObject("lb://SECURITY/validate?token" + authHeader, String.class));
+                    System.out.println("Hasil hit : " + template.getForObject("lb://SECURITY/validate?token" + authHeader, String.class));
                     jwtUtil.validateToken(authHeader);
 
                 } catch (Exception e) {
