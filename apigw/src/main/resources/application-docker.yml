@@ -13,8 +13,8 @@ spring:
           uri: lb://CUSTOMER
           predicates:
             - Path=/api/v1/customers/**
-          filters:
-            - AuthenticationFilter
+#          filters:
+#            - AuthenticationFilter
 
         - id: fraud
           uri: lb://FRAUD
